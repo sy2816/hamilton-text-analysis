@@ -33,6 +33,17 @@ v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 head(d, 10)
 
+library(highcharter)
+
+mostFreq <- head(d, n = 15)
+
+highchart() %>%
+  hc_add_series(data = mostFreq, type = "bar", hcaes(x = word, y = freq), name = "Frequency") %>%
+  hc_xAxis(list(categories = mostFreq$word)) %>%
+  hc_title(text = "Fifteen most frequently used words in Hamilton")
+
+
+
 #Remove random tilda
 d <- d[-29,]
 
@@ -43,12 +54,13 @@ set.seed(1776)
 d[1,2] <- d[1,2] - 15
 d <- dplyr::arrange(d, desc(freq))
 
+# For Garamond
 library(extrafont)
-library(extrafontdb)
 
 # To caps for stylization
 d$word <- toupper(d$word)
 
+# Wordcloud
 library(wordcloud2)
 wordcloud2(d, figPath = "logo.png", backgroundColor = "#dba018", fontFamily = "Garamond", color = "black",
            maxRotation = 0, size = 0.30)
