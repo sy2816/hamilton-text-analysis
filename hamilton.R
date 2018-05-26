@@ -33,10 +33,23 @@ v <- sort(rowSums(m),decreasing=TRUE)
 d <- data.frame(word = names(v),freq=v)
 head(d, 10)
 
+#Remove random tilda
+d <- d[-29,]
+
+
 set.seed(1776)
 
-png("hamilton_wordcloud.png", width = 12, height = 8, units = "in", res = 300)
-wordcloud(words = d$word, freq = d$freq, min.freq = 5, scale= c(5, .1),
-          max.words = Inf, random.order = FALSE)
-dev.off()
+# Some cheating to get 'hamilton' to show more prominately
+d[1,2] <- d[1,2] - 15
+d <- dplyr::arrange(d, desc(freq))
+
+library(extrafont)
+library(extrafontdb)
+
+# To caps for stylization
+d$word <- toupper(d$word)
+
+library(wordcloud2)
+wordcloud2(d, figPath = "logo.png", backgroundColor = "#dba018", fontFamily = "Garamond", color = "black",
+           maxRotation = 0, size = 0.30)
 
